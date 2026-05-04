@@ -42,25 +42,25 @@ curl -X POST 'http://localhost:8787/https://api.openai.com/v1/chat/completions' 
 Put the full upstream URL after the Worker origin:
 
 ```txt
-https://relayx.example.com/https://api.openai.com/v1/chat/completions
+https://relayx.bax.workers.dev/https://api.openai.com/v1/chat/completions
 ```
 
 The `/relay/` prefix is also accepted if you prefer a clearer route:
 
 ```txt
-https://relayx.example.com/relay/https://api.openai.com/v1/chat/completions
+https://relayx.bax.workers.dev/relay/https://api.openai.com/v1/chat/completions
 ```
 
 Query strings are preserved from the outer Worker URL:
 
 ```txt
-https://relayx.example.com/https://api.openai.com/v1/chat/completions?stream=false
+https://relayx.bax.workers.dev/https://api.openai.com/v1/chat/completions?stream=false
 ```
 
 For an OpenAI-compatible frontend, set `BASE_URL` to the Worker URL plus the upstream base:
 
 ```txt
-https://relayx.example.com/https://api.openai.com/v1
+https://relayx.bax.workers.dev/https://api.openai.com/v1
 ```
 
 `relayx` does not append API endpoints automatically. If the client requests only the URL above, the upstream request also stops at `/v1`. OpenAI-compatible clients usually append paths such as `/chat/completions` themselves.
