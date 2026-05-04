@@ -100,6 +100,41 @@ describe("relayx worker", () => {
     expect(response.headers.get("Access-Control-Allow-Origin")).toBe("https://app.example");
   });
 
+  it("allows localhost origins on any port when wildcarded", async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response("ok"));
+    const request = new Request("https://relayx.example/https://api.example.test/v1/models", {
+      headers: { Origin: "http://localhost:3000" }
+    });
+
+    const response = await worker.fetch(
+      request,
+      { ALLOWED_ORIGINS: "http://localhost:*, http://127.0.0.1:*" },
+      undefined,
+      fetcher
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Access-Control-Allow-Origin")).toBe("http://localhost:3000");
+  });
+
+  it("does not match wildcard localhost rules against other hosts", async () => {
+    const fetcher = vi.fn<typeof fetch>();
+    const request = new Request("https://relayx.example/https://api.example.test/v1/models", {
+      headers: { Origin: "http://localhost.evil.com:3000" }
+    });
+
+    const response = await worker.fetch(
+      request,
+      { ALLOWED_ORIGINS: "http://localhost:*, http://127.0.0.1:*" },
+      undefined,
+      fetcher
+    );
+
+    expect(fetcher).not.toHaveBeenCalled();
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({ error: "Origin is not allowed" });
+  });
+
   it("strips sensitive browser and edge headers before forwarding", async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response("ok"));
     const request = new Request("https://relayx.example/https://api.example.test/v1/models", {

@@ -28,6 +28,29 @@ function getAllowedOrigins(env: Env): Set<string> {
   );
 }
 
+function isWildcardLocalOriginAllowed(origin: string, rule: string): boolean {
+  try {
+    const originUrl = new URL(origin);
+    const ruleUrl = new URL(rule.replace(":*", ":0"));
+
+    if (originUrl.protocol !== ruleUrl.protocol) {
+      return false;
+    }
+
+    if (ruleUrl.hostname === "localhost") {
+      return originUrl.hostname === "localhost";
+    }
+
+    if (ruleUrl.hostname === "127.0.0.1") {
+      return originUrl.hostname === "127.0.0.1";
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function isOriginAllowed(request: Request, env: Env): boolean {
   const allowedOrigins = getAllowedOrigins(env);
   if (allowedOrigins.size === 0) {
@@ -39,7 +62,7 @@ function isOriginAllowed(request: Request, env: Env): boolean {
     return true;
   }
 
-  return allowedOrigins.has(origin);
+  return Array.from(allowedOrigins).some((rule) => rule === origin || (rule.endsWith(":*") && isWildcardLocalOriginAllowed(origin, rule)));
 }
 
 function getCorsHeaders(request: Request, originAllowed = true): Headers {
