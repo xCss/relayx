@@ -101,6 +101,18 @@ To allow only specific browser origins, configure `ALLOWED_ORIGINS` in `wrangler
 
 Requests from other browser origins receive `403`. Server-to-server requests without an `Origin` header are still allowed.
 
+To allow local development on any port, use wildcard rules:
+
+```jsonc
+{
+  "vars": {
+    "ALLOWED_ORIGINS": "http://localhost:*, http://127.0.0.1:*"
+  }
+}
+```
+
+These wildcards only match `localhost` and `127.0.0.1`, not similar-looking hostnames.
+
 ## Deploy
 
 Log in to Cloudflare:

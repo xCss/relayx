@@ -5,6 +5,6 @@
   "compatibility_date": "2026-05-04",
   // Optional browser CORS restriction:
   // "vars": {
-  //   "ALLOWED_ORIGINS": "https://rpx.pages.dev",
+  //   "ALLOWED_ORIGINS": "https://rpx.pages.dev, http://localhost:*, http://127.0.0.1:*",
   // },
 }
