@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "relayx",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-04",
+  // Optional browser CORS restriction:
+  // "vars": {
+  //   "ALLOWED_ORIGINS": "https://rpx.pages.dev",
+  // },
+}
